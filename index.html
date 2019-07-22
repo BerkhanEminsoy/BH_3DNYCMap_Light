@@ -191,7 +191,7 @@
 
        // use the three.js GLTF loader to add the 3D model to the three.js scene
        var loader = new THREE.GLTFLoader();
-       loader.load('https://raw.githubusercontent.com/sle7en/BH_3DNYCMap/master/3DModels/AmericanCopperBuildingConceptModel.gltf', (function(gltf) {
+       loader.load('https://raw.githubusercontent.com/sle7en/BH_3DNYCMap_Light/master/3DModels/AmericanCopperBuildingConceptModel.gltf', (function(gltf) {
        //'3DModels/AmericanCopperBuildingConceptModel.gltf'
        //'https://github.com/sle7en/BH_3DNYCMap/blob/master/3DModels/AmericanCopperBuildingConceptModel.gltf'
        //'https://docs.mapbox.com/mapbox-gl-js/assets/34M_17/34M_17.gltf'
@@ -229,7 +229,7 @@
        };
 
        map.on('load', function() {
-       map.addLayer(Custom3DModelLayer, 'building-3D');
+       map.addLayer(Custom3DModelLayer, 'building_3D');
        });
        //*/
 
