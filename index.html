@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- <link href="../favicon.ico" rel="shortcut icon" type="image/x-icon" /> -->
+  <title>BH NYC Projects Index</title>
+  <script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
+
+  <!-- START MapBox Supplement Code -->
+  <title>Display a map</title>
+  <script src='https://api.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css' rel='stylesheet' />
+  <!-- END MapBox Supplement Code -->
+
+  <!-- BEGIN CSS STYLE -->
+  <style>
+
+    body { margin:0px;
+           padding:20px;
+           font-family: mr-eaves-xl-modern,sans-serif;
+           font-weight: 300;
+           font-style: normal;
+         }
+
+    #map { position:absolute;
+           width: 97.5%;
+           height: 90%;
+           top: 50px;
+           border-radius:30px;
+           margin: 0px;
+           border: 2px solid rgb(0, 0, 0);
+           /*
+           width: WWidth;
+           height: WHeight;
+           width: window.innerWidth-document.body.padding;
+           height: window.innerHeight-document.body.padding;
+           */
+         }
+
+    #menu {
+         background: #fff;
+         position: absolute;
+         z-index: 1;
+         top: 10px;
+         right: 50px;
+         border-radius: 3px;
+         width: 120px;
+         border: 1px solid rgba(0,0,0,0.4);
+         font-family: 'Open Sans', sans-serif;
+         }
+
+    #menu a {
+         font-size: 13px;
+         color: #404040;
+         display: block;
+         margin: 0;
+         padding: 0;
+         padding: 10px;
+         text-decoration: none;
+         border-bottom: 1px solid rgba(0,0,0,0.25);
+         text-align: center;
+         }
+
+    #menu a:last-child {
+         border: none;
+         }
+
+    #menu a:hover {
+         background-color: #f8f8f8;
+         color: #404040;
+         }
+
+    #menu a.active {
+         background-color: #3887be;
+         color: #ffffff;
+         }
+
+    #menu a.active:hover {
+         background: #3074a4;
+         }
+
+  </style>
+  <!-- END CSS STYLE -->
+
+</head>
+<body>
+
+  <div id="title">
+    BH NYC Projects Index
+  </div>
+
+  <div id="intro">
+    <!--intro left empty to be filled by future paragraph elements-->
+  </div>
+
+  <!-- Load three.js libraries to laod a 3D model into a mapbox style map taken from https://docs.mapbox.com/mapbox-gl-js/example/add-3d-model/ -->
+  <script src='https://unpkg.com/three@0.102.0/build/three.min.js'></script>
+  <script src="https://unpkg.com/three@0.102.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://unpkg.com/three@0.102.0/examples/js/loaders/OBJLoader.js"></script>
+  <!-- End three.js library load-->
+
+  <!-- BEGIN MapBox Map -->
+  <div id='map'>
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiYnVyb2hhcHBvbGQiLCJhIjoiY2p3cnZyZmMyMDlhMTRhbnc0c2NhNnFlYyJ9.9YAuKw3KbJuWP1Okcgo_Vg';
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/burohappold/cjyesq47n0ckq1ctfknwndvzx',
+      center: [-73.977809, 40.741903],
+      zoom: 13,
+      bearing: -12.50,
+      pitch: 60.00,
+      antialias: true //create the gl context with MSAA antialiasing, so custom layers are antialiased
+    });
+  </script>
+  </div>
+  <!-- END MapBox Map -->
+
+  <!-- BEGIN MAIN JAVA DIV -->
+  <div id="javascript">
+    <script type="text/javascript">
+
+       const padding = parseInt(window.getComputedStyle(document.body)
+                                      .getPropertyValue('padding'),10);
+       //console.log(padding);
+
+       var width = window.innerWidth
+       var height = window.innerHeight
+
+       var WWidth = window.innerWidth-padding
+       var WHeight = window.innerHeight-padding
+
+       console.log(WWidth)
+       console.log(WHeight)
+
+       /*
+       //Store CSV Data in a variable
+       var TreeInventoryData = "Data/TreeInventoryUTM_Edit.csv"
+
+       //Load CSV DATA.
+       Promise.all([d3.csv(TreeInventoryData)])
+              .catch(function(error){console.log("error! " + error.name + error.message)}) //error catching function I found online. Is this the proper way to uset this?
+              .then(function(data) {
+               var trees = data[0];
+               console.log(data[0], typeof data[0]);
+       });
+       */
+
+       // parameters to ensure the model is georeferenced correctly on the map
+       ///*
+       var modelOrigin = [-73.971709, 40.744066]; //google format: (lat,long) mapbox gl: (long,lat)
+       var modelAltitude = 0;
+       var modelRotate = [Math.PI / 2, 1, 0];
+       var modelScale = 5.41843220338983e-8/64;
+       //old model scale 5.41843220338983e-8
+       //*/
+
+       // transformation parameters to position, rotate and scale the 3D model onto the map
+       ///*
+       var modelTransform = {
+       translateX: mapboxgl.MercatorCoordinate.fromLngLat(modelOrigin, modelAltitude).x,
+       translateY: mapboxgl.MercatorCoordinate.fromLngLat(modelOrigin, modelAltitude).y,
+       translateZ: mapboxgl.MercatorCoordinate.fromLngLat(modelOrigin, modelAltitude).z,
+       rotateX: modelRotate[0],
+       rotateY: modelRotate[1],
+       rotateZ: modelRotate[2],
+       scale: modelScale
+       };
+       //*/
+
+       // configuration of the custom layer for a 3D model per the CustomLayerInterface
+       ///*
+       var Custom3DModelLayer = {
+       id: '3d-model',
+       type: 'custom',
+       renderingMode: '3d',
+       onAdd: function(map, gl) {
+       this.camera = new THREE.Camera();
+       this.scene = new THREE.Scene();
+
+       // create two three.js lights to illuminate the model
+       var directionalLight = new THREE.DirectionalLight(0xffffff);
+       directionalLight.position.set(0, -70, 100).normalize();
+       this.scene.add(directionalLight);
+
+       var directionalLight2 = new THREE.DirectionalLight(0xffffff);
+       directionalLight2.position.set(0, 70, 100).normalize();
+       this.scene.add(directionalLight2);
+
+       // use the three.js GLTF loader to add the 3D model to the three.js scene
+       var loader = new THREE.GLTFLoader();
+       loader.load('https://raw.githubusercontent.com/sle7en/BH_3DNYCMap/master/3DModels/AmericanCopperBuildingConceptModel.gltf', (function(gltf) {
+       //'3DModels/AmericanCopperBuildingConceptModel.gltf'
+       //'https://github.com/sle7en/BH_3DNYCMap/blob/master/3DModels/AmericanCopperBuildingConceptModel.gltf'
+       //'https://docs.mapbox.com/mapbox-gl-js/assets/34M_17/34M_17.gltf'
+       this.scene.add(gltf.scene);
+       }).bind(this));
+       this.map = map;
+
+       // use the Mapbox GL JS map canvas for three.js
+       this.renderer = new THREE.WebGLRenderer({
+       canvas: map.getCanvas(),
+       context: gl,
+       antialias: true
+       });
+
+       this.renderer.autoClear = false;
+       },
+       render: function(gl, matrix) {
+       var rotationX = new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(1, 0, 0), modelTransform.rotateX);
+       var rotationY = new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(0, 1, 0), modelTransform.rotateY);
+       var rotationZ = new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(0, 0, 1), modelTransform.rotateZ);
+
+       var m = new THREE.Matrix4().fromArray(matrix);
+       var l = new THREE.Matrix4().makeTranslation(modelTransform.translateX, modelTransform.translateY, modelTransform.translateZ)
+       .scale(new THREE.Vector3(modelTransform.scale, -modelTransform.scale, modelTransform.scale))
+       .multiply(rotationX)
+       .multiply(rotationY)
+       .multiply(rotationZ);
+
+       this.camera.projectionMatrix.elements = matrix;
+       this.camera.projectionMatrix = m.multiply(l);
+       this.renderer.state.reset();
+       this.renderer.render(this.scene, this.camera);
+       this.map.triggerRepaint();
+       }
+       };
+
+       map.on('load', function() {
+       map.addLayer(Custom3DModelLayer, 'building-3D');
+       });
+       //*/
+
+    </script>
+
+  
+</div>
+<!-- END MAIN JAVA DIV -->
+
+</body>
+</html>
